@@ -1,5 +1,4 @@
 import Head from 'next/head';
-import styles from '../styles/Home.module.css';
 import { useQuery } from 'urql';
 import { PRODUCT_QUERY } from '../lib/query';
 import Product from '../components/Product';

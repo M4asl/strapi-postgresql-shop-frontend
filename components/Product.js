@@ -1,17 +1,18 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import React from 'react';
-import { PriceStyle, ProductStyle } from '../styles/ProductStyles';
+import { PriceStyle, ProductStyle } from '../styles/ProductStyle';
 
 const Product = ({ product }) => {
-  const { title, price, image } = product.attributes;
+  const { title, price, image, slug } = product.attributes;
   return (
     <ProductStyle>
-      <div>
+      <Link href={`products/${slug}`}>
         <img
           src={image.data.attributes.formats.small.url}
           alt={title}
         />
-      </div>
+      </Link>
       <h2>{title}</h2>
       <PriceStyle>{price}</PriceStyle>
     </ProductStyle>
