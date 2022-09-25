@@ -2,6 +2,8 @@ import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 import { useQuery } from 'urql';
 import { PRODUCT_QUERY } from '../lib/query';
+import Product from '../components/Product';
+import { Gallery } from '../styles/Gallery';
 
 export default function Home() {
   // Fetch products from strapi
@@ -10,10 +12,11 @@ export default function Home() {
 
   if (fetching) return <p>Loading...</p>;
   if (error) return <p>{error.message}</p>;
-  console.log(data);
+
+  const products = data.products.data;
 
   return (
-    <div className={styles.container}>
+    <div>
       <Head>
         <title>Create Next App</title>
         <meta
@@ -23,9 +26,11 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <div>Hello</div>
-      </main>
+      <Gallery>
+        {products.map((product) => (
+          <Product key={product} product={product} />
+        ))}
+      </Gallery>
     </div>
   );
 }
