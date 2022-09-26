@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
 import { useRouter } from 'next/router';
 import { useQuery } from 'urql';
 import { GET_PRODUCT_QUERY } from '../../lib/query';
@@ -10,7 +10,11 @@ import {
 } from '../../styles/ProductDetailsStyle';
 import { AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai';
 
+import { useStateContext } from '../../lib/context';
+
 const ProductDetails = () => {
+  const { qty, increaseQty, decreaseQty } = useStateContext();
+
   const { query } = useRouter();
   const [results] = useQuery({
     query: GET_PRODUCT_QUERY,
@@ -32,11 +36,11 @@ const ProductDetails = () => {
         <p>{description}</p>
         <Quantity>
           <span>Quantity</span>
-          <button>
+          <button onClick={increaseQty}>
             <AiFillPlusCircle />
           </button>
-          <p>0</p>
-          <button>
+          <p>{qty}</p>
+          <button onClick={decreaseQty}>
             <AiFillMinusCircle />
           </button>
         </Quantity>
