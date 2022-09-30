@@ -6,19 +6,35 @@ import {
   CardInfo,
   CartStyle,
   CartWrapper,
+  Checkout,
   EmptyStyle,
 } from '../styles/CartStyles';
 import { AiFillMinusCircle, AiFillPlusCircle } from 'react-icons/ai';
 import { Quantity } from '../styles/ProductDetailsStyle';
 
 const Cart = () => {
-  const { cartItems, setShowCart, onAdd, onRemove } =
+  const { cartItems, setShowCart, onAdd, onRemove, totalPrice } =
     useStateContext();
   return (
-    <CartWrapper onClick={() => setShowCart(false)}>
-      <CartStyle onClick={(e) => e.stopPropagation()}>
+    <CartWrapper
+      animate={{ opacity: 1 }}
+      initial={{ opacity: 0 }}
+      exit={{ opacity: 0 }}
+      transition={{ type: 'tween' }}
+      onClick={() => setShowCart(false)}
+    >
+      <CartStyle
+        initial={{ x: '50%' }}
+        animate={{ x: '0%' }}
+        exit={{ x: '50%' }}
+        onClick={(e) => e.stopPropagation()}
+      >
         {cartItems.length < 1 && (
-          <EmptyStyle>
+          <EmptyStyle
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
+          >
             <h1>You have more shopping to do :)</h1>
             <FaShoppingCart />
           </EmptyStyle>
@@ -26,7 +42,12 @@ const Cart = () => {
         {cartItems.length >= 1 &&
           cartItems.map((item) => {
             return (
-              <Card key={item.slug}>
+              <Card
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.3 }}
+                key={item.slug}
+              >
                 <img
                   src={item.image.data.attributes.formats.small.url}
                 />
@@ -35,9 +56,7 @@ const Cart = () => {
                   <h3>price</h3>
                   <Quantity>
                     <span>Quantity</span>
-                    <button
-                      onClick={() => onAdd(item, item.quantity)}
-                    >
+                    <button onClick={() => onAdd(item, 1)}>
                       <AiFillPlusCircle />
                     </button>
                     <p>{item.quantity}</p>
@@ -49,6 +68,12 @@ const Cart = () => {
               </Card>
             );
           })}
+        {cartItems.length >= 1 && (
+          <Checkout>
+            <h3>Subtotal: {totalPrice}$</h3>
+            <button>Purchase</button>
+          </Checkout>
+        )}
       </CartStyle>
     </CartWrapper>
   );
