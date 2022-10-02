@@ -11,6 +11,7 @@ import {
 } from '../styles/CartStyles';
 import { AiFillMinusCircle, AiFillPlusCircle } from 'react-icons/ai';
 import { Quantity } from '../styles/ProductDetailsStyle';
+import getStripe from '../lib/getStripe';
 
 const Cart = () => {
   const { cartItems, setShowCart, onAdd, onRemove, totalPrice } =
