@@ -15,6 +15,21 @@ import { Quantity } from '../styles/ProductDetailsStyle';
 const Cart = () => {
   const { cartItems, setShowCart, onAdd, onRemove, totalPrice } =
     useStateContext();
+
+  //Payment
+  const handleCheckout = async () => {
+    const stripePromise = await getStripe();
+    const response = await fetch('/api/stripe', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(cartItems),
+    });
+    const data = await response.json();
+    await stripePromise.redirectToCheckout({ sessionId: data.id });
+  };
+
   return (
     <CartWrapper
       animate={{ opacity: 1 }}
@@ -73,7 +88,7 @@ const Cart = () => {
         {cartItems.length >= 1 && (
           <Checkout layout>
             <h3>Subtotal: {totalPrice}$</h3>
-            <button>Purchase</button>
+            <button onClick={handleCheckout}>Purchase</button>
           </Checkout>
         )}
       </CartStyle>
