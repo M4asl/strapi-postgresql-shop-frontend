@@ -14,14 +14,9 @@ export default async function handler(req, res) {
         //Add Later
         // customer: stripeId,
         shipping_address_collection: {
-          allowed_countries: ['US', 'CA'],
+          allowed_countries: ['US', 'CA', 'PL'],
         },
 
-        allow_promotion_codes: true,
-        shipping_options: [
-          { shipping_rate: 'shr_1L7HGSJvB7fsxaM1DbSs7DeV' },
-          { shipping_rate: 'shr_1L7HGyJvB7fsxaM1OpMXx2Fn' },
-        ],
         line_items: req.body.map((item) => {
           return {
             price_data: {
@@ -34,22 +29,17 @@ export default async function handler(req, res) {
               },
               unit_amount: item.price * 100,
             },
-            adjustable_quantity: {
-              enabled: true,
-              minimum: 1,
-            },
+
             quantity: item.quantity,
           };
         }),
         success_url: `${req.headers.origin}/success`,
         cancel_url: `${req.headers.origin}/canceled`,
       });
+      console.log(session);
       res.status(200).json(session);
     } catch (err) {
       res.status(err.statusCode || 500).json(err.message);
     }
-  } else {
-    res.setHeader('Allow', 'POST');
-    res.status(405).end('Method Not Allowed');
   }
 }
