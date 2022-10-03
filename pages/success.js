@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
-
+const { motion } = require('framer-motion');
 // STRIPE_SECRET_KEY
 const stripe = require('stripe')(
   `${process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY}`
@@ -21,7 +21,14 @@ export default function Success({ order }) {
   const route = useRouter();
   return (
     <Wrapper>
-      <Card>
+      <Card
+        animate={{
+          opacity: 1,
+          scale: 1,
+          transition: { duration: 0.75 },
+        }}
+        initial={{ opacity: 0, scale: 0.75 }}
+      >
         <h1>Thank you for your order!</h1>
         <h2>A confirmation email has been sent to</h2>
         <h2>{order.customer_details.email}</h2>
@@ -59,7 +66,7 @@ const Wrapper = styled.div`
   margin: 5rem 15rem;
 `;
 
-const Card = styled.div`
+const Card = styled(motion.div)`
   display: flex;
   flex-direction: column;
   align-items: center;
