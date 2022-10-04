@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { FiShoppingBag } from 'react-icons/fi';
 import { NavItems, NavStyles } from '../styles/NavStyles';
 import Cart from './Cart';
+import User from './User';
+
 import { useStateContext } from '../lib/context';
 const { AnimatePresence } = require('framer-motion');
 
@@ -13,6 +15,7 @@ const Nav = () => {
     <NavStyles>
       <Link href={'/'}>Home.</Link>
       <NavItems>
+        <User />
         <div onClick={() => setShowCart(true)}>
           {totalQuantities > 0 && <span>{totalQuantities}</span>}
           <FiShoppingBag />
