@@ -1,19 +1,19 @@
-import React from 'react';
-import { useStateContext } from '../lib/context';
-import { FaShoppingCart } from 'react-icons/fa';
 import {
-  Card,
-  CardInfo,
   CartStyle,
-  CartWrapper,
-  Checkout,
+  Card,
   EmptyStyle,
+  CartWrapper,
+  CardInfo,
+  Checkout,
 } from '../styles/CartStyles';
-import { AiFillMinusCircle, AiFillPlusCircle } from 'react-icons/ai';
 import { Quantity } from '../styles/ProductDetailsStyle';
+import { FaShoppingCart } from 'react-icons/fa';
+import { AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai';
+//Import State
+import { useStateContext } from '../lib/context';
 import getStripe from '../lib/getStripe';
 
-const Cart = () => {
+export default function Cart() {
   const { cartItems, setShowCart, onAdd, onRemove, totalPrice } =
     useStateContext();
 
@@ -28,32 +28,31 @@ const Cart = () => {
       body: JSON.stringify(cartItems),
     });
     const data = await response.json();
-    // console.log(data);
     await stripePromise.redirectToCheckout({ sessionId: data.id });
   };
 
   return (
     <CartWrapper
-      animate={{ opacity: 1 }}
       initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ type: 'tween' }}
       onClick={() => setShowCart(false)}
     >
       <CartStyle
         layout
         initial={{ x: '50%' }}
-        animate={{ x: '0%' }}
+        animate={{ x: 0 }}
         exit={{ x: '50%' }}
+        transition={{ type: 'tween' }}
         onClick={(e) => e.stopPropagation()}
       >
         {cartItems.length < 1 && (
           <EmptyStyle
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2 }}
+            transition={{ delay: 0.4 }}
           >
-            <h1>You have more shopping to do :)</h1>
+            <h1>You have more shopping to do 😉</h1>
             <FaShoppingCart />
           </EmptyStyle>
         )}
@@ -61,41 +60,44 @@ const Cart = () => {
           cartItems.map((item) => {
             return (
               <Card
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.3 }}
-                key={item.slug}
                 layout
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{
+                  opacity: 1,
+                  scale: 1,
+                  transition: { delay: 0.4 },
+                }}
+                key={item.slug}
               >
                 <img
                   src={item.image.data.attributes.formats.small.url}
                 />
                 <CardInfo>
-                  <h3>title</h3>
-                  <h3>price</h3>
+                  <h3>{item.title}</h3>
+                  <h3>{item.price}$</h3>
                   <Quantity>
                     <span>Quantity</span>
-                    <button onClick={() => onAdd(item, 1)}>
-                      <AiFillPlusCircle />
-                    </button>
-                    <p>{item.quantity}</p>
                     <button onClick={() => onRemove(item)}>
                       <AiFillMinusCircle />
+                    </button>
+                    <p>{item.quantity}</p>
+                    <button onClick={() => onAdd(item, 1)}>
+                      <AiFillPlusCircle />
                     </button>
                   </Quantity>
                 </CardInfo>
               </Card>
             );
           })}
-        {cartItems.length >= 1 && (
-          <Checkout layout>
-            <h3>Subtotal: {totalPrice}$</h3>
-            <button onClick={handleCheckout}>Purchase</button>
-          </Checkout>
-        )}
+        <Checkout layout>
+          {cartItems.length >= 1 && (
+            <div>
+              <h3>Subtotal ${totalPrice}</h3>
+              <button onClick={handleCheckout}>Purchase</button>
+            </div>
+          )}
+        </Checkout>
       </CartStyle>
     </CartWrapper>
   );
-};
-
-export default Cart;
+}
