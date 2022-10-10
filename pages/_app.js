@@ -3,6 +3,7 @@ import { Provider, createClient } from 'urql';
 import Nav from '../components/Nav';
 import { UserProvider } from '@auth0/nextjs-auth0';
 import { StateContext } from '../lib/context';
+import { Toaster } from 'react-hot-toast';
 
 const client = createClient({ url: 'http://localhost:1337/graphql' });
 
@@ -11,6 +12,7 @@ function MyApp({ Component, pageProps }) {
     <UserProvider>
       <StateContext>
         <Provider value={client}>
+          <Toaster />
           <Nav />
           <Component {...pageProps} />
         </Provider>
